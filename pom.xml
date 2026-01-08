@@ -102,8 +102,10 @@
                 <version>3.5.3</version>
                 <configuration>
                     <includes>
-                        <include>**/*Runner.java</include>
-                        <include>**/*Runers.java</include>
+                        <!-- Asegurarse de que el runner de Cucumber sea ejecutado por failsafe -->
+                        <include>**/RunCucumberTest.java</include>
+                        <!-- también puede incluirse por patrón si se prefiere -->
+                        <include>**/*IT.java</include>
                     </includes>
                     <systemPropertyVariables>
                         <tags>${tags}</tags>
@@ -144,6 +146,18 @@
                         <version>${serenity.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <!-- Configure Surefire to exclude the Cucumber runner so tests are executed by Failsafe -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <excludes>
+                        <!-- Evitar que RunCucumberTest se ejecute en la fase 'test' -->
+                        <exclude>**/RunCucumberTest.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
