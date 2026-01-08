@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
@@ -14,7 +14,9 @@ permissions:
 
 jobs:
   build:
+    name: Build and deploy (main)
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -66,4 +68,60 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/serenity
           publish_branch: gh-pages
+          keep_files: false
+
+  smoke:
+    name: Run smoke tests (develop)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Display Java version
+        run: java -version
+
+      - name: Run smoke tests
+        env:
+          MAVEN_OPTS: -Xmx2g
+        run: |
+          mvn clean verify "-Dcucumber.filter.tags=@smoke"
+
+      - name: Upload Serenity smoke report (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-smoke-report
+          path: |
+            target/site/serenity
+            target/cucumber.json
+            target/cucumber.xml
+
+      - name: Archive smoke surefire/failsafe reports (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-failsafe-smoke
+          path: |
+            target/surefire-reports
+            target/failsafe-reports
+
+      # Desplegar sitio de Serenity para la rama develop a gh-pages-develop
+      - name: Deploy Serenity site to GitHub Pages (gh-pages-develop)
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/serenity
+          publish_branch: gh-pages-develop
           keep_files: false
