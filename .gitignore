@@ -1,0 +1,41 @@
+/target/
+*.log
+*.tmp
+*.class
+*.jar
+*.war
+*.ear
+/.idea/
+/.project
+/.classpath
+/.settings/
+/.vscode/
+*.iml
+.DS_Store
+# Maven
+mvnw
+mvnw.cmd
+.settings/
+# Mac
+*.DS_Store
+# Windows
+Thumbs.db
+# Test output
+/test-output/
+
+# Serenity reports
+target/site/serenity/
+
+# IntelliJ
+out/
+
+# gradle
+.gradle/
+
+# distribution
+dist/
+
+# others
+env/
+node_modules/
+
