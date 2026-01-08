@@ -60,7 +60,7 @@ jobs:
             target/surefire-reports
             target/failsafe-reports
 
-      # Desplegar el sitio de Serenity a GitHub Pages (gh-pages) solo si build es exitoso
+      # Desplegar el sitio de Serenity a GitHub Pages (gh-pages) en la raíz
       - name: Deploy Serenity site to GitHub Pages (gh-pages)
         if: success()
         uses: peaceiris/actions-gh-pages@v4
@@ -116,12 +116,13 @@ jobs:
             target/surefire-reports
             target/failsafe-reports
 
-      # Desplegar sitio de Serenity para la rama develop a gh-pages-develop
-      - name: Deploy Serenity site to GitHub Pages (gh-pages-develop)
+      # Desplegar sitio de Serenity para la rama develop dentro de gh-pages/develop
+      - name: Deploy Serenity site to GitHub Pages (gh-pages - develop folder)
         if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/serenity
-          publish_branch: gh-pages-develop
+          publish_branch: gh-pages
+          destination_dir: develop
           keep_files: false
