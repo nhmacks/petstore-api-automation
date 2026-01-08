@@ -1,3 +1,4 @@
+@smoke
 Feature: Delete Order from Petstore API
   As a consumer of the API
   I want to be able to delete orders by id and validate responses
@@ -19,8 +20,8 @@ Feature: Delete Order from Petstore API
 
   @do002 @unhappy
   Scenario: Delete a non-existing order returns 404
-    Given the order does not exist with id "9999999999"
-    When the client deletes order with id "9999999999"
+    Given the order does not exist with id "99999999909"
+    When the client deletes order with id "99999999909"
     Then the response status should be 404
     And the response should indicate order not found 404
 

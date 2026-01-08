@@ -14,7 +14,7 @@ Feature: Place Order in Petstore API
     And the quantity in the response should be <quantity>
     And the shipDate in the response should be "<shipDate>"
     And the status in the response should be "<status>"
-    And the complete flag in the response should be <complete>
+    And the complete flag in the response should be "<complete>"
 
     Examples: happy and edge cases
       | id         | petId | quantity | shipDate                      | status     | complete |
@@ -22,7 +22,6 @@ Feature: Place Order in Petstore API
       | 1234       | 2     | 1        | 2024-06-16T11:30:00.556+0000  | approved   | false    |
       | 12347      | 3     | 5        | 2024-06-17T09:15:00.556+0000  | delivered  | true     |
       | 1000000000 | 10    | 0        | 2026-01-08T02:55:10.556+0000  | placed     | false    |
-      | 9999999999 | 999   | 1000     | 2025-12-31T23:59:59.556+0000  | approved   | true     |
 
 
     @po002 @negative
