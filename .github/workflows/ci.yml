@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Permisos necesarios para desplegar a GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Display Java version
+        run: java -version
+
+      - name: Build and run tests (maven)
+        env:
+          MAVEN_OPTS: -Xmx2g
+        run: |
+          mvn -U -B clean verify "-Dcucumber.filter.tags=@po001"
+
+      - name: Upload Serenity report (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-report
+          path: |
+            target/site/serenity
+            target/serenity-reports
+            target/cucumber.json
+            target/cucumber.xml
+
+      - name: Archive surefire reports (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: |
+            target/surefire-reports
+            target/failsafe-reports
+
+      # Subir y desplegar el sitio de Serenity a GitHub Pages solo si build es exitoso
+      - name: Upload Pages artifact (Serenity site)
+        if: success()
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: target/site/serenity
+
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: actions/deploy-pages@v1
