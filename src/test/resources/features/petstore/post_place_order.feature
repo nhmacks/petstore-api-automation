@@ -1,4 +1,4 @@
-@postOrder @smoke
+@smoke
 Feature: Place Order in Petstore API
   As a consumer of the API
   I want to be able to place an order for a pet in the Petstore

@@ -1,4 +1,4 @@
-@getOrder @smoke
+@smoke
 Feature: Get Order from Petstore API
   As a consumer of the API
   I want to retrieve orders by id and validate responses
