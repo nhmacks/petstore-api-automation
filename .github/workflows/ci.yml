@@ -134,7 +134,7 @@ jobs:
         run: |
           if [ "$GITHUB_REF" = "refs/heads/develop" ]; then
             echo "Running smoke tests on $GITHUB_REF"
-            mvn clean verify "-Dcucumber.filter.tags=@smoke"
+            mvn -U -B clean verify "-Dcucumber.filter.tags=@po001"
           else
             echo "Not on develop branch ($GITHUB_REF) - skipping smoke tests"
           fi
