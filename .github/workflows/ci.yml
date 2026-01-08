@@ -38,7 +38,7 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx2g
         run: |
-          mvn -U -B clean verify "-Dcucumber.filter.tags=@po001"
+          mvn clean verify "-Dcucumber.filter.tags=@po001"
 
       - name: Upload Serenity report (always)
         if: always()
