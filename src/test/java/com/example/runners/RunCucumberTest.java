@@ -8,7 +8,6 @@ import io.cucumber.junit.CucumberOptions;
 @CucumberOptions(
     features = "src/test/resources/features",
     plugin = {"pretty", "json:target/cucumber.json", "junit:target/cucumber.xml"},
-    tags = "@api-test",
     glue = {"com.example.steps", "com.example.hooks"}
 )
 public class RunCucumberTest {

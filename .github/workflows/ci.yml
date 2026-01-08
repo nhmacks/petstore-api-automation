@@ -39,6 +39,13 @@ jobs:
           java -version || true
           mvn -v || true
 
+      - name: Set up JDK 17 (build)
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven'
+
       - name: Display Java version
         run: java -version
 
@@ -81,6 +88,16 @@ jobs:
           ls -la target/site/serenity || true
           echo "Find files (build)..."
           find target/site/serenity -type f -maxdepth 4 -print || true
+
+      - name: Validate serenity site (build)
+        if: success()
+        run: |
+          if [ ! -f target/site/serenity/index.html ]; then
+            echo "ERROR: target/site/serenity/index.html not found - aborting deploy";
+            ls -la target/site || true;
+            exit 1;
+          fi
+          echo "Index found, continuing..."
 
       # Desplegar el sitio de Serenity a GitHub Pages (gh-pages) en la raíz
       - name: Deploy Serenity site to GitHub Pages (gh-pages)
@@ -134,7 +151,7 @@ jobs:
         run: |
           if [ "$GITHUB_REF" = "refs/heads/develop" ]; then
             echo "Running smoke tests on $GITHUB_REF"
-            mvn -U -B clean verify "-Dcucumber.filter.tags=@po001"
+            mvn -U -B clean verify "-Dcucumber.filter.tags=@smoke"
           else
             echo "Not on develop branch ($GITHUB_REF) - skipping smoke tests"
           fi
@@ -166,6 +183,16 @@ jobs:
           ls -la target/site/serenity || true
           echo "Find files (smoke)..."
           find target/site/serenity -type f -maxdepth 4 -print || true
+
+      - name: Validate serenity site (smoke)
+        if: success()
+        run: |
+          if [ ! -f target/site/serenity/index.html ]; then
+            echo "ERROR: target/site/serenity/index.html not found - aborting deploy";
+            ls -la target/site || true;
+            exit 1;
+          fi
+          echo "Index found, continuing..."
 
       # Desplegar sitio de Serenity para la rama develop dentro de gh-pages/develop
       - name: Deploy Serenity site to GitHub Pages (gh-pages - develop folder)
