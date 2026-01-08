@@ -55,7 +55,7 @@ jobs:
           MAVEN_OPTS: -Xmx2g
         run: |
           echo "Running main tests (po001) on $GITHUB_REF (event: $GITHUB_EVENT_NAME, base: $GITHUB_BASE_REF)"
-          mvn clean verify "-Dcucumber.filter.tags=@smock"
+          mvn clean verify "-Dcucumber.filter.tags=@smoke"
 
       - name: Upload Serenity report (always)
         if: always()
