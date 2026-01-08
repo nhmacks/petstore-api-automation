@@ -60,6 +60,15 @@ jobs:
             target/surefire-reports
             target/failsafe-reports
 
+      - name: Verify serenity site files (build)
+        if: success()
+        run: |
+          echo "Listing target/site/serenity (build)..."
+          ls -la target/site || true
+          ls -la target/site/serenity || true
+          echo "Find files (build)..."
+          find target/site/serenity -type f -maxdepth 4 -print || true
+
       # Desplegar el sitio de Serenity a GitHub Pages (gh-pages) en la raíz
       - name: Deploy Serenity site to GitHub Pages (gh-pages)
         if: success()
@@ -116,6 +125,15 @@ jobs:
           path: |
             target/surefire-reports
             target/failsafe-reports
+
+      - name: Verify serenity site files (smoke)
+        if: success()
+        run: |
+          echo "Listing target/site/serenity (smoke)..."
+          ls -la target/site || true
+          ls -la target/site/serenity || true
+          echo "Find files (smoke)..."
+          find target/site/serenity -type f -maxdepth 4 -print || true
 
       # Desplegar sitio de Serenity para la rama develop dentro de gh-pages/develop
       - name: Deploy Serenity site to GitHub Pages (gh-pages - develop folder)
