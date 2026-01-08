@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   workflow_dispatch: {}
 
 # Permisos necesarios para desplegar a GitHub Pages
@@ -50,15 +50,12 @@ jobs:
         run: java -version
 
       - name: Build and run tests (maven) - main-only
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main')
         env:
           MAVEN_OPTS: -Xmx2g
         run: |
-          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
-            echo "Running main tests on $GITHUB_REF"
-            mvn clean verify "-Dcucumber.filter.tags=@po001"
-          else
-            echo "Not on main branch ($GITHUB_REF) - skipping main tests"
-          fi
+          echo "Running main tests (po001) on $GITHUB_REF (event: $GITHUB_EVENT_NAME, base: $GITHUB_BASE_REF)"
+          mvn clean verify "-Dcucumber.filter.tags=@po001"
 
       - name: Upload Serenity report (always)
         if: always()
@@ -146,15 +143,12 @@ jobs:
         run: java -version
 
       - name: Run smoke tests (develop-only)
+        if: github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'develop')
         env:
           MAVEN_OPTS: -Xmx2g
         run: |
-          if [ "$GITHUB_REF" = "refs/heads/develop" ]; then
-            echo "Running smoke tests on $GITHUB_REF"
-            mvn -U -B clean verify "-Dcucumber.filter.tags=@smoke"
-          else
-            echo "Not on develop branch ($GITHUB_REF) - skipping smoke tests"
-          fi
+          echo "Running smoke tests on $GITHUB_REF (event: $GITHUB_EVENT_NAME, base: $GITHUB_BASE_REF)"
+          mvn -U -B clean verify "-Dcucumber.filter.tags=@smoke"
 
       - name: Upload Serenity smoke report (always)
         if: always()
