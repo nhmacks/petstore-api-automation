@@ -56,13 +56,12 @@ jobs:
             target/surefire-reports
             target/failsafe-reports
 
-      # Subir y desplegar el sitio de Serenity a GitHub Pages solo si build es exitoso
-      - name: Upload Pages artifact (Serenity site)
+      # Desplegar el sitio de Serenity a GitHub Pages (gh-pages) solo si build es exitoso
+      - name: Deploy Serenity site to GitHub Pages (gh-pages)
         if: success()
-        uses: actions/upload-pages-artifact@v1
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: target/site/serenity
-
-      - name: Deploy to GitHub Pages
-        if: success()
-        uses: actions/deploy-pages@v1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/serenity
+          publish_branch: gh-pages
+          keep_history: false
