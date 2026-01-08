@@ -68,6 +68,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/serenity
           publish_branch: gh-pages
+          force_orphan: true
           keep_files: false
 
   smoke:
@@ -125,4 +126,5 @@ jobs:
           publish_dir: ./target/site/serenity
           publish_branch: gh-pages
           destination_dir: develop
-          keep_files: false
+          keep_files: true
+          allow_empty_commit: false
